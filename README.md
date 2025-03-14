@@ -13,3 +13,5 @@ Downloading and installing dependencies:
     - Install dependencies by running  `pip install -r requirement.txt'
         - If you add any imports, add it to this file and run the above the command\
     - To exit your venv type `deactivate` in terminal
+
+To run code, enter this in terminal: `python main.py`
