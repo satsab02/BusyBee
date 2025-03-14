@@ -6,6 +6,7 @@ from utils.read_goalpoints import readgoals
 if __name__ == '__main__':
     goalpoints = readgoals('goalpoints.txt')
     for start, goal, obstacles in goalpoints:
+        print(start, goal, obstacles)
         path, vor = voronoi_a_star_path(start, goal, obstacles)
         plot_path(start, goal, path, vor, obstacles)
         #print(start, goal, obstacles)

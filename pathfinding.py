@@ -82,5 +82,8 @@ def voronoi_a_star_path(start, goal, obstacles):
     graph[goal] = [nearest_goal]
     
     path = a_star(graph, start, goal)
+    if not path:
+        print("No valid path found! Check the Voronoi graph and obstacles.")
+    
     return( path, vor)
 
