@@ -21,7 +21,7 @@ def generate_valid_point(obstacles, boundary=(0, 10, 0, 10), max_attempts=1000):
         point = (np.random.uniform(x_min, x_max), np.random.uniform(y_min, y_max))
         if not is_point_in_obstacle(point, obstacles):
             return point
-    raise RuntimeError("⚠️ Could not find a valid point outside obstacles!")
+    raise RuntimeError("Could not find a valid point outside obstacles!")
 
 def generate_valid_start_goal(obstacles, min_distance=3):
     """Generate start and goal points that are valid and sufficiently separated."""
@@ -30,4 +30,4 @@ def generate_valid_start_goal(obstacles, min_distance=3):
         goal = generate_valid_point(obstacles)
         if np.linalg.norm(np.array(start) - np.array(goal)) > min_distance:  
             return start, goal
-    raise RuntimeError("⚠️ Could not find valid start & goal points!")
+    raise RuntimeError("Could not find valid start & goal points!")
