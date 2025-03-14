@@ -1,14 +1,9 @@
 import heapq
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.spatial import Voronoi, voronoi_plot_2d
+from scipy.spatial import Voronoi
+from utils.geometry import euclidean_distance, is_point_in_obstacle
 
 
-## im using euclidian distance - we may want to compute the langrangian
-
-# Calculate Euclidian Distance
-def euclidean_distance(p1, p2):
-    return np.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
 
 # A* Algorithm
 def a_star(graph, start, goal):
@@ -64,12 +59,7 @@ def make_voronoi(vor, obstacles):
     
     return graph
 
-# See if the point is within an exsiting obstacle
-def is_point_in_obstacle(point, obstacles):
-    for obs in obstacles:
-        if obs[0] <= point[0] <= obs[2] and obs[1] <= point[1] <= obs[3]:
-            return True
-    return False
+
 
 def voronoi_a_star_path(start, goal, obstacles):
     # points here 
@@ -91,36 +81,6 @@ def voronoi_a_star_path(start, goal, obstacles):
     graph[start] = [nearest_start]
     graph[goal] = [nearest_goal]
     
-    # Find the shortest path using A*
     path = a_star(graph, start, goal)
-    
-    fig, ax = plt.subplots()
-    voronoi_plot_2d(vor, ax=ax)
-    
-    # Making onbstacles 
-    for obs in obstacles:
-        rect = plt.Rectangle((obs[0], obs[1]), obs[2]-obs[0], obs[3]-obs[1], color='red', alpha=0.5)
-        ax.add_patch(rect)
-    
-    # plotting the path
-    if path:
-        px, py = zip(*path)
-        plt.plot(px, py, 'g-', linewidth=2)
-        plt.plot(start[0], start[1], 'go')  # Start 
-        plt.plot(goal[0], goal[1], 'ro')   # Goal
-        
-    plt.xlim(0, 10)
-    plt.ylim(0, 10)
-    plt.show()
+    return( path, vor)
 
-start_point = (0.5, 0.5)
-goal_point = (9.5, 9.5)
-obstacles_list = [(3, 3, 4, 4), (6, 6, 7.5, 7.5)]  # List of rectangular obstacles (x_min, y_min, x_max, y_max)
-
-voronoi_a_star_path(start_point, goal_point, obstacles_list)
-
-start_point_1 = (2, 5)
-goal_point_1 = (9.75, 2)
-obstacles_list_1 = [(1, 1, 2, 2), (5, 5, 8, 8)]  # List of rectangular obstacles (x_min, y_min, x_max, y_max)
-
-voronoi_a_star_path(start_point_1, goal_point_1, obstacles_list_1)
