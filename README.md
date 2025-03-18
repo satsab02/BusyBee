@@ -15,3 +15,5 @@ Downloading and installing dependencies:
     - To exit your venv type `deactivate` in terminal
 
 To run code, enter this in terminal: `python main.py`
+
+Approved by Jia
