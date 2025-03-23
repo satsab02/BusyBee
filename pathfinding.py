@@ -4,6 +4,21 @@ from scipy.spatial import Voronoi
 from utils.geometry import euclidean_distance, is_point_in_obstacle
 
 
+# Making voronoi
+def make_voronoi(vor, obstacles):
+    graph = {}
+    for vertex in vor.vertices:
+        if not is_point_in_obstacle(vertex, obstacles):
+            graph[tuple(vertex)] = []
+    
+    for ridge in vor.ridge_vertices:
+        if -1 not in ridge:  #I think this ignores infinite stuff - not sure
+            p1, p2 = vor.vertices[ridge]
+            if tuple(p1) in graph and tuple(p2) in graph:
+                graph[tuple(p1)].append(tuple(p2))
+                graph[tuple(p2)].append(tuple(p1))
+    
+    return graph
 
 # A* Algorithm
 def a_star(graph, start, goal):
@@ -42,24 +57,6 @@ def a_star(graph, start, goal):
                     heapq.heappush(open_set, (f_score[neighbor], neighbor))
     
     return []  # No Solution beeep boop beep 
-
-# Making voronoi
-def make_voronoi(vor, obstacles):
-    graph = {}
-    for vertex in vor.vertices:
-        if not is_point_in_obstacle(vertex, obstacles):
-            graph[tuple(vertex)] = []
-    
-    for ridge in vor.ridge_vertices:
-        if -1 not in ridge:  #I think this ignores infinite stuff - not sure
-            p1, p2 = vor.vertices[ridge]
-            if tuple(p1) in graph and tuple(p2) in graph:
-                graph[tuple(p1)].append(tuple(p2))
-                graph[tuple(p2)].append(tuple(p1))
-    
-    return graph
-
-
 
 def voronoi_a_star_path(start, goal, obstacles):
     # points here 
