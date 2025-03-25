@@ -27,7 +27,7 @@ def build_graph(start_positions, goal_clusters):
 
     return graph
 
-def a_star(graph, start, goal, weight = 0.2):
+def a_star(graph, start, goal, weight):
     # CUE starts here
     open_set = []
     heapq.heappush(open_set, (0, start))
@@ -70,7 +70,7 @@ def a_star(graph, start, goal, weight = 0.2):
 
 # Require multi-goal A* algorithm
 
-def multi_goal_a_star(graph, start, goals):
+def multi_goal_a_star(graph, start, goals, weight):
     total_path = []
     current = start  # Current position
 
@@ -83,7 +83,7 @@ def multi_goal_a_star(graph, start, goals):
             print(f"Warning: Goal point {goal} not in graph.")
             continue
 
-        segment = a_star(graph, current, goal)
+        segment = a_star(graph, current, goal, weight)
         if segment:
             total_path.extend(segment[:-1])  # Avoid duplicating the goal point
         else:
@@ -91,7 +91,7 @@ def multi_goal_a_star(graph, start, goals):
         current = goal
 
     # Return to the start point
-    return_path = a_star(graph, current, start)
+    return_path = a_star(graph, current, start, weight)
     if return_path:
         total_path.extend(return_path[:-1])
     else:
