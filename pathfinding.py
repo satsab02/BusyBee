@@ -1,6 +1,6 @@
 # A* Algorithm
 import heapq
-from utils.geometry import euclidean_distance
+from utils.geometry import euclidean_distance, manhattan_distance
 import numpy as np
 
 
@@ -27,17 +27,18 @@ def build_graph(start_positions, goal_clusters):
 
     return graph
 
-def a_star(graph, start, goal):
+def a_star(graph, start, goal, weight):
     # CUE starts here
     open_set = []
     heapq.heappush(open_set, (0, start))
+    open_set_lookup = {start}
     
     came_from = {}
     g_score = {node: float('inf') for node in graph}
     g_score[start] = 0
     
     f_score = {node: float('inf') for node in graph}
-    f_score[start] = euclidean_distance(start, goal)
+    f_score[start] = weight * manhattan_distance(start, goal) #using a wieght to the distances
     
     while open_set:
         _, current = heapq.heappop(open_set)
@@ -52,22 +53,23 @@ def a_star(graph, start, goal):
             return path[::-1]
         
         for neighbor in graph[current]:
-            tentative_g_score = g_score[current] + euclidean_distance(current, neighbor)
+            tentative_g_score = g_score[current] + manhattan_distance(current, neighbor)
             
             if tentative_g_score < g_score[neighbor]:
                 came_from[neighbor] = current
                 g_score[neighbor] = tentative_g_score
-                f_score[neighbor] = g_score[neighbor] + euclidean_distance(neighbor, goal)
+                f_score[neighbor] = g_score[neighbor] + weight*manhattan_distance(neighbor, goal)
                 
-                if neighbor not in [i[1] for i in open_set]:
+                if neighbor not in open_set_lookup:
                     heapq.heappush(open_set, (f_score[neighbor], neighbor))
+                    open_set_lookup.add(neighbor)
     
     return []  # No Solution beeep boop beep 
 
 
 # Require multi-goal A* algorithm
 
-def multi_goal_a_star(graph, start, goals):
+def multi_goal_a_star(graph, start, goals, weight):
     total_path = []
     current = start  # Current position
 
@@ -80,7 +82,7 @@ def multi_goal_a_star(graph, start, goals):
             print(f"Warning: Goal point {goal} not in graph.")
             continue
 
-        segment = a_star(graph, current, goal)
+        segment = a_star(graph, current, goal, weight)
         if segment:
             total_path.extend(segment[:-1])  # Avoid duplicating the goal point
         else:
@@ -88,7 +90,7 @@ def multi_goal_a_star(graph, start, goals):
         current = goal
 
     # Return to the start point
-    return_path = a_star(graph, current, start)
+    return_path = a_star(graph, current, start, weight)
     if return_path:
         total_path.extend(return_path[:-1])
     else:

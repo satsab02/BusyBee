@@ -6,6 +6,9 @@ import numpy as np
 def euclidean_distance(p1, p2):
     return np.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
 
+def manhattan_distance(p1, p2):
+    return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
+
 # See if the point is within an exsiting obstacle
 def is_point_in_obstacle(point, obstacles, margin = 0.2):
     for obs in obstacles:

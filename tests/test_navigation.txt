@@ -8,3 +8,7 @@ Goal Points: 5,4|9,4|9,6|7,7|5,6
 #Star Cluster
 Start Points: 0.5, 0.5 | 2, 6
 Goal Points: 5,5|7,2|9,5|9,7|7,9|5,7  
+
+# Diamond Shape
+Start Points: 0.5, 0.5 |
+Goal Points: 6,5|7,7|7,3|8,5   
