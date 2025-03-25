@@ -18,10 +18,6 @@ for start, goals in zip(start_positions, goal_clusters):
 
 # Convert all numpy.float64 values in paths to Python float
 paths = preprocess_paths(paths)
-
-print("Paths:", paths)
-
-
 plot_path(paths, start_positions, goal_clusters)
 
 
