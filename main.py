@@ -1,16 +1,24 @@
-from pathfinding import voronoi_a_star_path
+from pathfinding import multi_goal_a_star, build_graph
 from utils.visualization import plot_path
 from utils.read_goalpoints import readgoals
 
 
-if __name__ == '__main__':
-    goalpoints = readgoals('goalpoints.txt')
-    for start, goal, obstacles in goalpoints:
-        print(start, goal, obstacles)
-        path, vor = voronoi_a_star_path(start, goal, obstacles)
-        plot_path(start, goal, path, vor, obstacles)
-        #print(start, goal, obstacles)
+# Preprocess paths to ensure all coordinates are Python floats
+def preprocess_paths(paths):
+    return [[(float(x), float(y)) for x, y in path] for path in paths]
 
+start_positions, goal_clusters = readgoals("goalpoints.txt")
+print(start_positions)
+print(goal_clusters)
+graph = build_graph(start_positions, goal_clusters)  # Generate A* graph
+paths = []
+for start, goals in zip(start_positions, goal_clusters):
+    path = multi_goal_a_star(graph, start, goals)
+    paths.append(path)
+
+# Convert all numpy.float64 values in paths to Python float
+paths = preprocess_paths(paths)
+plot_path(paths, start_positions, goal_clusters)
 
 
 
