@@ -27,7 +27,7 @@ def plot_path(paths, start_positions, goal_clusters):
 
         x_pos, y_pos = zip(*path)  # Unpack path into x and y coordinates
         ax.plot(x_pos, y_pos, '--', alpha=0.5, color=colors[i % len(colors)], label=f"Path {i + 1}")
-        robot, = ax.plot([], [], 'o', markersize=8, color=colors[i % len(colors)], label=f"Robot {i + 1}")
+        robot, = ax.plot([], [], 'o', markersize=8, color=colors[5], label=f"Robot {i + 1}")
         robots.append((robot, x_pos, y_pos))
 
     def update(frame):

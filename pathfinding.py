@@ -11,7 +11,7 @@ def build_graph(start_positions, goal_clusters):
     all_points = start_positions + [goal for cluster in goal_clusters for goal in cluster]
 
     # Generate random points and add them to the graph
-    random_points = np.random.rand(100, 2) * 10  # Generate random points in a 10x10 area
+    random_points = np.random.rand(50, 2) * 10  # Generate random points in a 10x10 area
     for p in random_points:
         graph[tuple(p)] = []
 
