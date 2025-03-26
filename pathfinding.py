@@ -38,7 +38,7 @@ def a_star(graph, start, goal, weight):
     g_score[start] = 0
     
     f_score = {node: float('inf') for node in graph}
-    f_score[start] = weight * manhattan_distance(start, goal) #using a wieght to the distances
+    f_score[start] = weight * euclidean_distance(start, goal) #using a wieght to the distances
     
     while open_set:
         _, current = heapq.heappop(open_set)
@@ -53,12 +53,12 @@ def a_star(graph, start, goal, weight):
             return path[::-1]
         
         for neighbor in graph[current]:
-            tentative_g_score = g_score[current] + manhattan_distance(current, neighbor)
+            tentative_g_score = g_score[current] + euclidean_distance(current, neighbor)
             
             if tentative_g_score < g_score[neighbor]:
                 came_from[neighbor] = current
                 g_score[neighbor] = tentative_g_score
-                f_score[neighbor] = g_score[neighbor] + weight*manhattan_distance(neighbor, goal)
+                f_score[neighbor] = g_score[neighbor] + weight*euclidean_distance(neighbor, goal)
                 
                 if neighbor not in open_set_lookup:
                     heapq.heappush(open_set, (f_score[neighbor], neighbor))
