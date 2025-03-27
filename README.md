@@ -6,6 +6,7 @@ Pathfinding algorithm for bee pollination
 
 - Install [`uv`](https://docs.astral.sh/uv/getting-started/installation/#winget)
   - For Windows, run: `winget install --id=astral-sh.uv  -e`
+    - Restart VSCode
   - Can update with: `uv self update`
 - Can add packages with `uv add <package>`
   - e.g `uv add numpy`
