@@ -2,7 +2,7 @@ import numpy as np
 from scipy.spatial import KDTree
 from utils.geometry import euclidean_distance
 
-def kd_tree_graph(start, goals, random_points=50, k_neighbours=5):
+def kd_tree_graph(start, goals, random_points=100, k_neighbours=5):
 
     graph = {} #initialize graph
 
