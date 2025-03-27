@@ -1,22 +1,44 @@
-import heapq
-import numpy as np
-from scipy.spatial import Voronoi
-from utils.geometry import euclidean_distance, is_point_in_obstacle
-
-
-
 # A* Algorithm
-def a_star(graph, start, goal):
+import heapq
+from utils.geometry import euclidean_distance, manhattan_distance
+import numpy as np
+
+
+def build_graph(start_positions, goal_clusters):
+    graph = {}  # Initialize graph
+
+    # Combine start and goal points into a single list
+    all_points = start_positions + [goal for cluster in goal_clusters for goal in cluster]
+
+    # Generate random points and add them to the graph
+    random_points = np.random.rand(50, 2) * 10  # Generate random points in a 10x10 area
+    for p in random_points:
+        graph[tuple(p)] = []
+
+    # Add start and goal points explicitly to the graph
+    for point in all_points:
+        graph[tuple(point)] = []
+
+    # Connect each point to its nearest neighbors
+    for point in graph:
+        distances = [(other, euclidean_distance(point, other)) for other in graph if other != point]
+        distances.sort(key=lambda x: x[1])  # Sort by distance
+        graph[point] = [neighbor for neighbor, _ in distances[:5]]  # Connect to 5 nearest neighbors
+
+    return graph
+
+def a_star(graph, start, goal, weight):
     # CUE starts here
     open_set = []
     heapq.heappush(open_set, (0, start))
+    open_set_lookup = {start}
     
     came_from = {}
     g_score = {node: float('inf') for node in graph}
     g_score[start] = 0
     
     f_score = {node: float('inf') for node in graph}
-    f_score[start] = euclidean_distance(start, goal)
+    f_score[start] = weight * euclidean_distance(start, goal) #using a wieght to the distances
     
     while open_set:
         _, current = heapq.heappop(open_set)
@@ -36,54 +58,42 @@ def a_star(graph, start, goal):
             if tentative_g_score < g_score[neighbor]:
                 came_from[neighbor] = current
                 g_score[neighbor] = tentative_g_score
-                f_score[neighbor] = g_score[neighbor] + euclidean_distance(neighbor, goal)
+                f_score[neighbor] = g_score[neighbor] + weight*euclidean_distance(neighbor, goal)
                 
-                if neighbor not in [i[1] for i in open_set]:
+                if neighbor not in open_set_lookup:
                     heapq.heappush(open_set, (f_score[neighbor], neighbor))
+                    open_set_lookup.add(neighbor)
     
     return []  # No Solution beeep boop beep 
 
-# Making voronoi
-def make_voronoi(vor, obstacles):
-    graph = {}
-    for vertex in vor.vertices:
-        if not is_point_in_obstacle(vertex, obstacles):
-            graph[tuple(vertex)] = []
-    
-    for ridge in vor.ridge_vertices:
-        if -1 not in ridge:  #I think this ignores infinite stuff - not sure
-            p1, p2 = vor.vertices[ridge]
-            if tuple(p1) in graph and tuple(p2) in graph:
-                graph[tuple(p1)].append(tuple(p2))
-                graph[tuple(p2)].append(tuple(p1))
-    
-    return graph
 
+# Require multi-goal A* algorithm
 
+def multi_goal_a_star(graph, start, goals, weight):
+    total_path = []
+    current = start  # Current position
 
-def voronoi_a_star_path(start, goal, obstacles):
-    # points here 
-    points = np.random.rand(100, 2) * 10
-    for obs in obstacles:
-        x_min, y_min, x_max, y_max = obs
-        points = np.vstack((points, [[x_min, y_min], [x_min, y_max], [x_max, y_min], [x_max, y_max]]))
-    
-    # make voronoi diagram 
-    vor = Voronoi(points)
-    
-    # Build the graph from Voronoi diagram
-    graph = make_voronoi(vor, obstacles)
-    
-    # Add start and goal points to the graph by connecting them -  joining to nearest vertex 
-    nearest_start = min(graph.keys(), key=lambda v: euclidean_distance(v, start))
-    nearest_goal = min(graph.keys(), key=lambda v: euclidean_distance(v, goal))
-    
-    graph[start] = [nearest_start]
-    graph[goal] = [nearest_goal]
-    
-    path = a_star(graph, start, goal)
-    if not path:
-        print("No valid path found! Check the Voronoi graph and obstacles.")
-    
-    return( path, vor)
+    for goal in goals:
+        if current not in graph:
+            print(f"Warning: Start point {current} not in graph.")
+            continue
 
+        if goal not in graph:
+            print(f"Warning: Goal point {goal} not in graph.")
+            continue
+
+        segment = a_star(graph, current, goal, weight)
+        if segment:
+            total_path.extend(segment[:-1])  # Avoid duplicating the goal point
+        else:
+            print(f"Warning: No path found from {current} to {goal}.")
+        current = goal
+
+    # Return to the start point
+    return_path = a_star(graph, current, start, weight)
+    if return_path:
+        total_path.extend(return_path[:-1])
+    else:
+        print(f"Warning: No path found from {current} back to start {start}.")
+
+    return total_path
