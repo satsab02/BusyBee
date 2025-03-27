@@ -53,7 +53,7 @@ def a_star(graph, start, goal, weight):
             return path[::-1]
         
         for neighbor in graph[current]:
-            tentative_g_score = g_score[current] + euclidean_distance(current, neighbor)
+            tentative_g_score = g_score[current] + weight*euclidean_distance(current, neighbor)
             
             if tentative_g_score < g_score[neighbor]:
                 came_from[neighbor] = current
