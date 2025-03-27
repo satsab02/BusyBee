@@ -1,19 +1,16 @@
 # BusyBee
-Pathfinding algorithm for be pollination
 
+Pathfinding algorithm for bee pollination
 
-Setup Instructions:
+## Setup Instructions
 
-*Make sure to use the venv as it won't mess up any other dependencies you have installed*
+- Install [`uv`](https://docs.astral.sh/uv/getting-started/installation/#winget)
+  - For Windows, run: `winget install --id=astral-sh.uv  -e`
+  - Can update with: `uv self update`
+- Can add packages with `uv add <package>`
+  - e.g `uv add numpy`
+- Run code with `uv run main.py`
 
-Downloading and installing dependencies:
+No need to figure out `venv` nonsense.
 
-    - To ceate a virtual environment use this command in terminal: `python -m venv venv`
-    - Enter your virtual environment by typing this into terminal: `venv/scripts/activate`
-    - Install dependencies by running  `pip install -r requirement.txt'
-        - If you add any imports, add it to this file and run the above the command\
-    - To exit your venv type `deactivate` in terminal
-
-To run code, enter this in terminal: `python main.py`
-
-Approved by Jia
+Approved by Ajay (I deleted Jia's code fyi)
