@@ -1,5 +1,3 @@
-from utils.geometry import generate_valid_point, generate_valid_start_goal
-
 def readgoals(filename, boundary=(0, 10, 0, 10)):
     start_points = []
     goal_sets = []

@@ -72,6 +72,7 @@ def a_star(graph, start, goal, weight):
 def multi_goal_a_star(graph, start, goals, weight):
     total_path = []
     current = start  # Current position
+    failed_paths = 0
 
     for goal in goals:
         if current not in graph:
@@ -87,6 +88,7 @@ def multi_goal_a_star(graph, start, goals, weight):
             total_path.extend(segment[:-1])  # Avoid duplicating the goal point
         else:
             print(f"Warning: No path found from {current} to {goal}.")
+            failed_paths += 1
         current = goal
 
     # Return to the start point
@@ -95,5 +97,7 @@ def multi_goal_a_star(graph, start, goals, weight):
         total_path.extend(return_path[:-1])
     else:
         print(f"Warning: No path found from {current} back to start {start}.")
+        failed_paths += 1
 
+    print(f"Total failed paths: {failed_paths}")
     return total_path
