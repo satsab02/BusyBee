@@ -3,7 +3,7 @@ from utils.visualization import plot_path
 from utils.read_goalpoints import readgoals
 from utils.optimization import kd_tree_graph
 from travellingsalesman import optimized_goal_order
-from utils.geometry import euclidean_distance
+from utils.geometry import euclidean_distance, generate_random_cluster
 
 a_star_weight = 0.1  # Weight for A* heuristic
 
@@ -15,14 +15,16 @@ def preprocess_paths(paths):
 def calculate_path_distance(path):
     return sum(euclidean_distance(path[i], path[i + 1]) for i in range(len(path) - 1))
 
+flower_locations = generate_random_cluster(20, (0,30), (0,30))  # Generate random flower locations
+print("Flower Locations:", flower_locations)
 start_positions, goal_clusters = readgoals("goalpoints.txt")
-print("Start Positions:", start_positions)
+#print("Start Positions:", start_positions)
 print("Goal Clusters:", goal_clusters)
 
-graph = kd_tree_graph(start_positions, goal_clusters)  # Generate A* graph
+graph = kd_tree_graph(start_positions, flower_locations)  # Generate A* graph
 paths = []
 
-for start, goals in zip(start_positions, goal_clusters):
+for start, goals in zip(start_positions, flower_locations):
     # Calculate path for the given goal order
     print("\nGiven Goal Order:", goals)
     given_path = multi_goal_a_star(graph, start, goals, a_star_weight)
@@ -30,20 +32,20 @@ for start, goals in zip(start_positions, goal_clusters):
     print("Given Path Distance:", given_path_distance)
 
     # Calculate path for the optimized goal order
-    optimized_goals = optimized_goal_order(start, goals)
+    '''optimized_goals = optimized_goal_order(start, goals)
     print("Optimized Goal Order:", optimized_goals)
     optimized_path = multi_goal_a_star(graph, start, optimized_goals, a_star_weight)
     optimized_path_distance = calculate_path_distance(optimized_path)
-    print("Optimized Path Distance:", optimized_path_distance)
+    print("Optimized Path Distance:", optimized_path_distance)'''
 
     # Append the optimized path for visualization
-    paths.append(optimized_path)
+    paths.append(given_path)
 
 # Convert all numpy.float64 values in paths to Python float
 paths = preprocess_paths(paths)
 
 # Visualize the paths
-plot_path(paths, start_positions, goal_clusters)
+plot_path(paths, start_positions, flower_locations)
 
 
 

@@ -17,20 +17,12 @@ def is_point_in_obstacle(point, obstacles, margin = 0.2):
             return True
     return False
 
-def generate_valid_point(obstacles, boundary=(0, 10, 0, 10), max_attempts=1000):
-    """Generate a random valid point outside obstacles within the given boundary."""
-    x_min, x_max, y_min, y_max = boundary
-    for _ in range(max_attempts):
-        point = (np.random.uniform(x_min, x_max), np.random.uniform(y_min, y_max))
-        if not is_point_in_obstacle(point, obstacles):
-            return point
-    raise RuntimeError("Could not find a valid point outside obstacles!")
+def generate_random_cluster(flowers, x_range, y_range):
+    locations_set = []
+    x_coords = np.random.uniform(x_range[0], x_range[1], flowers)
+    y_coords = np.random.uniform(y_range[0], y_range[1], flowers)
 
-def generate_valid_start_goal(obstacles, min_distance=3):
-    """Generate start and goal points that are valid and sufficiently separated."""
-    for _ in range(1000):  # Prevent infinite loop
-        start = generate_valid_point(obstacles)
-        goal = generate_valid_point(obstacles)
-        if np.linalg.norm(np.array(start) - np.array(goal)) > min_distance:  
-            return start, goal
-    raise RuntimeError("Could not find valid start & goal points!")
+    locations = list(zip(x_coords, y_coords))
+    locations = [(float(x), float(y)) for x, y in locations]
+    locations_set.append(locations)
+    return locations_set

@@ -4,8 +4,8 @@ from scipy.spatial import Voronoi, voronoi_plot_2d
 
 def plot_path(paths, start_positions, goal_clusters):
     fig, ax = plt.subplots()
-    ax.set_xlim(0, 10)
-    ax.set_ylim(0, 10)
+    ax.set_xlim(0, 40)
+    ax.set_ylim(0, 40)
 
     colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange']
     robots = []
