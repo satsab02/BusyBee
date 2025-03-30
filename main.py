@@ -4,6 +4,7 @@ from utils.read_goalpoints import readgoals
 from utils.optimization import kd_tree_graph
 from travellingsalesman import optimized_goal_order
 from utils.geometry import euclidean_distance, generate_random_cluster
+from noise import add_rain, gen_rain
 
 a_star_weight = 0.1  # Weight for A* heuristic
 
@@ -15,6 +16,7 @@ def preprocess_paths(paths):
 def calculate_path_distance(path):
     return sum(euclidean_distance(path[i], path[i + 1]) for i in range(len(path) - 1))
 
+rain = gen_rain(2, 3)  # Generate random rain locations]
 flower_locations = generate_random_cluster(20, (0,30), (0,30))  # Generate random flower locations
 print("Flower Locations:", flower_locations)
 start_positions, goal_clusters = readgoals("goalpoints.txt")
@@ -22,6 +24,7 @@ start_positions, goal_clusters = readgoals("goalpoints.txt")
 print("Goal Clusters:", goal_clusters)
 
 graph = kd_tree_graph(start_positions, flower_locations)  # Generate A* graph
+graph = add_rain(graph, rain)  # Add noise to the graph
 paths = []
 
 for start, goals in zip(start_positions, flower_locations):
@@ -45,7 +48,7 @@ for start, goals in zip(start_positions, flower_locations):
 paths = preprocess_paths(paths)
 
 # Visualize the paths
-plot_path(paths, start_positions, flower_locations)
+plot_path(paths, start_positions, flower_locations, rain)
 
 
 

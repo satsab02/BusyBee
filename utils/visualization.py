@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from scipy.spatial import Voronoi, voronoi_plot_2d
 
-def plot_path(paths, start_positions, goal_clusters):
+def plot_path(paths, start_positions, goal_clusters, rain):
     fig, ax = plt.subplots()
     ax.set_xlim(0, 40)
     ax.set_ylim(0, 40)
@@ -14,10 +14,14 @@ def plot_path(paths, start_positions, goal_clusters):
     for i, start in enumerate(start_positions):
         ax.plot(start[0], start[1], 'go', markersize=10, label="Start" if i == 0 else "")  # Green for start points
 
+    #plot rain points
+    for i, rain_point in enumerate(rain):
+        circle = plt.Circle((rain_point[0], rain_point[1]), rain_point[2], color='red', alpha=0.5, label="Rain" if i == 0 else "")
+        ax.add_patch(circle)
     # Plot goal points
     for i, goals in enumerate(goal_clusters):
         for goal in goals:
-            ax.plot(goal[0], goal[1], 'bo', markersize=8, label="Goal" if i == 0 else "")  # Red for goal points
+            ax.plot(goal[0], goal[1], 'bo', markersize=8, label="Goal" if i == 0 else "")  # Blue for goal points
 
     # Plot paths and initialize robots
     for i, path in enumerate(paths):
