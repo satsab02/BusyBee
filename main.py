@@ -17,7 +17,7 @@ def calculate_path_distance(path):
     return sum(euclidean_distance(path[i], path[i + 1]) for i in range(len(path) - 1))
 
 rain = gen_rain(2, 3)  # Generate random rain locations]
-flower_locations = generate_random_cluster(20, (0,30), (0,30))  # Generate random flower locations
+flower_locations = generate_random_cluster(20, (0,40), (0,40))  # Generate random flower locations
 print("Flower Locations:", flower_locations)
 start_positions, goal_clusters = readgoals("goalpoints.txt")
 #print("Start Positions:", start_positions)
@@ -35,14 +35,14 @@ for start, goals in zip(start_positions, flower_locations):
     print("Given Path Distance:", given_path_distance)
 
     # Calculate path for the optimized goal order
-    '''optimized_goals = optimized_goal_order(start, goals, True)
+    optimized_goals = optimized_goal_order(start, goals, True)
     print("Optimized Goal Order:", optimized_goals)
     optimized_path = multi_goal_a_star(graph, start, optimized_goals, a_star_weight)
     optimized_path_distance = calculate_path_distance(optimized_path)
-    print("Optimized Path Distance:", optimized_path_distance)'''
+    print("Optimized Path Distance:", optimized_path_distance)
 
     # Append the optimized path for visualization
-    paths.append(given_path)
+    paths.append(optimized_path)
 
 # Convert all numpy.float64 values in paths to Python float
 paths = preprocess_paths(paths)
