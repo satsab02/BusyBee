@@ -35,7 +35,7 @@ for start, goals in zip(start_positions, flower_locations):
     print("Given Path Distance:", given_path_distance)
 
     # Calculate path for the optimized goal order
-    '''optimized_goals = optimized_goal_order(start, goals)
+    '''optimized_goals = optimized_goal_order(start, goals, True)
     print("Optimized Goal Order:", optimized_goals)
     optimized_path = multi_goal_a_star(graph, start, optimized_goals, a_star_weight)
     optimized_path_distance = calculate_path_distance(optimized_path)

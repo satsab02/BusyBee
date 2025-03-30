@@ -37,6 +37,8 @@ def nn_tsp(start, goals):
 
     return path
 
-def optimized_goal_order(start, goals):
-    '''This function uses the brute force method to determine the best order of goalpoints to visit'''
-    return brute_force_tsp(start, goals)
+def optimized_goal_order(start, goals, nn_flag):
+    if nn_flag == True:
+        return nn_tsp(start, goals)
+    else:
+        return brute_force_tsp(start, goals)
