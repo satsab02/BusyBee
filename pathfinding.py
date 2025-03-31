@@ -101,3 +101,96 @@ def multi_goal_a_star(graph, start, goals, weight):
 
     print(f"Total failed paths: {failed_paths}")
     return total_path
+
+
+def bidirectional_a_star(graph, start, goal, weight):
+    if start not in graph or goal not in graph:
+        print("Start or goal point not in graph.")
+        return []
+    
+    open_forward = []
+    open_backward = []
+    heapq.heappush(open_forward, (0, start))
+    heapq.heappush(open_backward, (0, goal))
+
+    open_forward_lookup = {start}
+    open_backward_lookup = {goal}
+
+    came_from_forward = {}
+    came_from_backward = {}
+    g_score_forward = {node: float('inf') for node in graph}
+    g_score_backward = {node: float('inf') for node in graph}
+
+    g_score_forward[start] = 0
+    g_score_backward[goal] = 0
+
+    poi = None
+    min_cost = float('inf')
+
+    while open_forward and open_backward:
+       
+       for open_set, came_from, one_way_g_score, other_way_g_score, direction in [(open_forward, came_from_forward, g_score_forward, g_score_backward, 'forward'),
+                                                                                  (open_backward, came_from_backward, g_score_backward, g_score_forward, 'backward')]:
+            _, current = heapq.heappop(open_set)
+
+            if current in other_way_g_score and one_way_g_score[current] + other_way_g_score[current] < min_cost:
+                min_cost = one_way_g_score[current] + other_way_g_score[current]
+                poi = current
+            
+            for neighbour, _ in graph[current]:
+                tentative_g_score = one_way_g_score[current] + weight*euclidean_distance(current, neighbour)
+
+                if tentative_g_score < one_way_g_score[neighbour]:
+                    came_from[neighbour] = current
+                    one_way_g_score[neighbour] = tentative_g_score
+                    heapq.heappush(open_set, (tentative_g_score, neighbour))
+                    open_forward_lookup.add(neighbour) if direction == 'forward' else open_backward_lookup.add(neighbour)
+    
+    if not poi:
+        print("No path found.")
+        return []
+    
+    path_forward, path_backward = [], []
+    current = poi
+
+    while current in came_from_forward:
+        path_forward.append(current)
+        current = came_from_forward[current]
+    path_forward.append(start)
+
+    current = poi
+    while current in came_from_backward:
+        path_backward.append(current)
+        current = came_from_backward[current]
+    path_backward.append(goal)
+
+    return path_forward[::-1] + path_backward[1:]  # Combine paths, avoiding duplicate meeting point
+
+def multi_bidirectional(graph, start, goals, weight):
+    total_path = []
+    current = start
+    failed_paths = 0
+
+    for goal in goals:
+        if current not in graph or goal not in graph:
+            print(f"Warning: Start point {current} or goal point {goal} not in graph.")
+            continue
+        segment = bidirectional_a_star(graph, current, goal, weight)
+        if segment:
+            total_path.extend(segment[:-1])
+        else:
+            print(f"Warning: No path found from {current} to {goal}.")
+            failed_paths += 1
+        current = goal
+    return_path = bidirectional_a_star(graph, current, start, weight)
+    if return_path:
+        total_path.extend(return_path[:-1])
+    else:
+        print(f"Warning: No path found from {current} back to start {start}.")
+        failed_paths += 1
+    
+    print(f"Total failed paths: {failed_paths}")
+    return total_path
+
+
+                    
