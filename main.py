@@ -1,4 +1,4 @@
-from pathfinding import multi_goal_a_star, build_graph
+from pathfinding import multi_goal_a_star, build_graph, multi_bidirectional
 from utils.visualization import plot_path
 from utils.read_goalpoints import readgoals
 from utils.optimization import kd_tree_graph
@@ -30,14 +30,14 @@ paths = []
 for start, goals in zip(start_positions, flower_locations):
     # Calculate path for the given goal order
     print("\nGiven Goal Order:", goals)
-    given_path = multi_goal_a_star(graph, start, goals, a_star_weight)
+    given_path = multi_bidirectional(graph, start, goals, a_star_weight)
     given_path_distance = calculate_path_distance(given_path)
     print("Given Path Distance:", given_path_distance)
 
     # Calculate path for the optimized goal order
     optimized_goals = optimized_goal_order(start, goals, True)
     print("Optimized Goal Order:", optimized_goals)
-    optimized_path = multi_goal_a_star(graph, start, optimized_goals, a_star_weight)
+    optimized_path = multi_bidirectional(graph, start, optimized_goals, a_star_weight)
     optimized_path_distance = calculate_path_distance(optimized_path)
     print("Optimized Path Distance:", optimized_path_distance)
 
