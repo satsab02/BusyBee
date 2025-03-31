@@ -20,6 +20,25 @@ def brute_force_tsp(start, goals):
     
     return(list(best_order))
 
-def optimized_goal_order(start, goals):
-    '''This function uses the brute force method to determine the best order of goalpoints to visit'''
-    return brute_force_tsp(start, goals)
+def nn_tsp(start, goals):
+    '''Solves the traveling salesman problem using a nearest-neighbor approach'''
+
+    unvisited = set(goals)
+    path = [start]
+    total_distance = 0
+    current = start
+    
+    while unvisited:
+        next_city = min(unvisited, key = lambda city:euclidean_distance(current, city))
+        total_distance += euclidean_distance(current, next_city)
+        path.append(next_city)
+        unvisited.remove(next_city)
+        current = next_city
+
+    return path
+
+def optimized_goal_order(start, goals, nn_flag):
+    if nn_flag == True:
+        return nn_tsp(start, goals)
+    else:
+        return brute_force_tsp(start, goals)
