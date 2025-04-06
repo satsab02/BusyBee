@@ -4,6 +4,8 @@ from utils.read_goalpoints import readgoals
 from utils.optimization import kd_tree_graph
 from travellingsalesman import optimized_goal_order
 from utils.geometry import euclidean_distance, generate_random_cluster
+import matplotlib.pyplot as plt
+import numpy as np
 
 a_star_weight = 0.1  # Weight for A* heuristic
 
@@ -43,6 +45,8 @@ for start, goals in zip(start_positions, flower_locations):
 
 # Convert all numpy.float64 values in paths to Python float
 paths = preprocess_paths(paths)
+print(paths)
+# print(len(paths))
 
 # Visualize the paths
 plot_path(paths, start_positions, flower_locations)
